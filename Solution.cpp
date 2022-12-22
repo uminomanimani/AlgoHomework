@@ -36,7 +36,7 @@ bool canLoad(const Box& box, const Point& target, const std::vector<std::pair<Po
     return true;
 }
 
-void firstFit(std::vector<Box> boxes, int carriageLength, int carriageWidth, int carriageHeight, bool shuffle = false)
+void firstFit(std::vector<Box>& boxes, int carriageLength, int carriageWidth, int carriageHeight, bool shuffle = false)
 {
     auto t1 = clock();
     if (!shuffle) std::sort(boxes.begin(), boxes.end(), [](const Box& l, const Box& r)->bool {return l.Volume() > r.Volume(); });
