@@ -41,13 +41,13 @@ void firstFit(std::vector<Box>& boxes, int carriageLength, int carriageWidth, in
     auto t1 = clock();
     if (!shuffle) std::sort(boxes.begin(), boxes.end(), [](const Box& l, const Box& r)->bool {return l.Volume() > r.Volume(); });
     else std::shuffle(boxes.begin(), boxes.end(), std::mt19937());
-    std::vector<std::pair<Point, Box>> LoadedBoxes;
+    std::vector<std::pair<Point, Box>> loadedBoxes;
     int loadedVolume = 0;
     int loadedNum = 0;
     for (size_t i = 0; i < boxes.size(); ++i)
     {
         //如果一个箱子都还没放进去
-        if (LoadedBoxes.empty())
+        if (loadedBoxes.empty())
         {
             //对这个箱子做最多5次旋转，第6次旋转就恢复原样了
             //旋转五次都放不进去，直接扔掉
@@ -56,7 +56,7 @@ void firstFit(std::vector<Box>& boxes, int carriageLength, int carriageWidth, in
                 //如果在某个状态能放进去，那就直接放进去
                 if (boxes[i].Length() <= carriageLength && boxes[i].Width() <= carriageWidth && boxes[i].Height() <= carriageHeight)
                 {
-                    LoadedBoxes.push_back(std::pair<Point, Box>(Point(0, 0, 0), boxes[i]));
+                    loadedBoxes.push_back(std::pair<Point, Box>(Point(0, 0, 0), boxes[i]));
                     loadedVolume += boxes[i].Volume();
                     ++loadedNum;
                     break;
@@ -76,7 +76,7 @@ void firstFit(std::vector<Box>& boxes, int carriageLength, int carriageWidth, in
         */
         else
         {
-            for (const auto& loaded : LoadedBoxes)
+            for (const auto& loaded : loadedBoxes)
             {
                 bool flag = false;
                 Point pos1 = Point(loaded.first.x, loaded.first.y, loaded.first.z + loaded.second.Height());
@@ -84,25 +84,25 @@ void firstFit(std::vector<Box>& boxes, int carriageLength, int carriageWidth, in
                 Point pos3 = Point(loaded.first.x + loaded.second.Length(), loaded.first.y, loaded.first.z);
                 for (int j = 0; j < 5; ++j)
                 {
-                    if (canLoad(boxes[i], pos1, LoadedBoxes, carriageLength, carriageWidth, carriageHeight))
+                    if (canLoad(boxes[i], pos1, loadedBoxes, carriageLength, carriageWidth, carriageHeight))
                     {
-                        LoadedBoxes.push_back(std::pair<Point, Box>(Point(pos1), boxes[i]));
+                        loadedBoxes.push_back(std::pair<Point, Box>(Point(pos1), boxes[i]));
                         loadedVolume += boxes[i].Volume();
                         ++loadedNum;
                         flag = true;
                         break;
                     }
-                    if (canLoad(boxes[i], pos2, LoadedBoxes, carriageLength, carriageWidth, carriageHeight))
+                    if (canLoad(boxes[i], pos2, loadedBoxes, carriageLength, carriageWidth, carriageHeight))
                     {
-                        LoadedBoxes.push_back(std::pair<Point, Box>(Point(pos2), boxes[i]));
+                        loadedBoxes.push_back(std::pair<Point, Box>(Point(pos2), boxes[i]));
                         loadedVolume += boxes[i].Volume();
                         ++loadedNum;
                         flag = true;
                         break;
                     }
-                    if (canLoad(boxes[i], pos3, LoadedBoxes, carriageLength, carriageWidth, carriageHeight))
+                    if (canLoad(boxes[i], pos3, loadedBoxes, carriageLength, carriageWidth, carriageHeight))
                     {
-                        LoadedBoxes.push_back(std::pair<Point, Box>(Point(pos3), boxes[i]));
+                        loadedBoxes.push_back(std::pair<Point, Box>(Point(pos3), boxes[i]));
                         loadedVolume += boxes[i].Volume();
                         ++loadedNum;
                         flag = true;
@@ -118,7 +118,7 @@ void firstFit(std::vector<Box>& boxes, int carriageLength, int carriageWidth, in
     }
     auto t2 = clock();
     std::cout << "放进去" << loadedNum << "个。" <<  "填充率" << loadedVolume * 100.0 / (carriageHeight * carriageLength * carriageWidth) << "%。" << "耗时" << (double)(t2 - t1) / CLOCKS_PER_SEC << "s。" << std::endl;
-    for (const auto& i : LoadedBoxes)
+    for (const auto& i : loadedBoxes)
     {
         std::cout << "位置：" << i.first << "，形状：" << i.second << std::endl;
     }
