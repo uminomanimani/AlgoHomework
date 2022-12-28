@@ -23,6 +23,7 @@ using Datasets = std::vector<Dataset>;
 
 Datasets datasets =
 {
+    //Dataset{"E0_0", Group{ItemSeries{587, 220, 233, 1}}}
     Dataset{"E1_1", Group{ItemSeries{108, 76, 30, 40}, ItemSeries(110, 43, 25, 33), ItemSeries(92, 81, 55, 39)}},
     Dataset{"E1_2", Group{ItemSeries{91, 54, 45, 32}, ItemSeries{105, 77, 72, 24}, ItemSeries{79, 78, 48, 30}}},
     Dataset{"E1_3", Group{ItemSeries{91, 54, 45, 32}, ItemSeries{105, 77, 72, 24}, ItemSeries{79, 78, 48, 30}}},

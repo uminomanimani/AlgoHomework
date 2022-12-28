@@ -38,33 +38,34 @@ bool canLoad(const Box& box, const Point& target, const std::vector<std::pair<Po
 
 void firstFit(std::vector<Box>& boxes, int carriageLength, int carriageWidth, int carriageHeight, bool shuffle = false)
 {
+    using Point_Box = std::pair<Point, Box>;
     auto t1 = clock();
     if (!shuffle) std::sort(boxes.begin(), boxes.end(), [](const Box& l, const Box& r)->bool {return l.Volume() > r.Volume(); });
-    else std::shuffle(boxes.begin(), boxes.end(), std::mt19937());
-    std::vector<std::pair<Point, Box>> loadedBoxes;
+    else std::shuffle(boxes.begin(), boxes.end(), std::mt19937(time(nullptr)));
+    std::vector<Point_Box> loadedBoxes;
     int loadedVolume = 0;
     int loadedNum = 0;
-    for (size_t i = 0; i < boxes.size(); ++i)
+    for (decltype(boxes.begin()) boxIter = boxes.begin(); boxIter != boxes.end(); ++boxIter)
     {
         //如果一个箱子都还没放进去
         if (loadedBoxes.empty())
         {
             //对这个箱子做最多5次旋转，第6次旋转就恢复原样了
             //旋转五次都放不进去，直接扔掉
-            for (int j = 0; j < 5; ++j)
+            for (int j = 0; j <= 5; ++j)
             {
                 //如果在某个状态能放进去，那就直接放进去
-                if (boxes[i].Length() <= carriageLength && boxes[i].Width() <= carriageWidth && boxes[i].Height() <= carriageHeight)
+                if (boxIter->Length() <= carriageLength && boxIter->Width() <= carriageWidth && boxIter->Height() <= carriageHeight)
                 {
-                    loadedBoxes.push_back(std::pair<Point, Box>(Point(0, 0, 0), boxes[i]));
-                    loadedVolume += boxes[i].Volume();
+                    loadedBoxes.push_back(Point_Box(Point(0, 0, 0), *boxIter));
+                    loadedVolume += boxIter->Volume();
                     ++loadedNum;
                     break;
                 }
                 //否则对箱子进行旋转，最多5次
                 else
                 {
-                    boxes[i].Rotate();
+                    boxIter->Rotate();
                 }
             }
         }
@@ -82,34 +83,34 @@ void firstFit(std::vector<Box>& boxes, int carriageLength, int carriageWidth, in
                 Point pos1 = Point(loaded.first.x, loaded.first.y, loaded.first.z + loaded.second.Height());
                 Point pos2 = Point(loaded.first.x, loaded.first.y + loaded.second.Width(), loaded.first.z);
                 Point pos3 = Point(loaded.first.x + loaded.second.Length(), loaded.first.y, loaded.first.z);
-                for (int j = 0; j < 5; ++j)
+                for (int j = 0; j <= 5; ++j)
                 {
-                    if (canLoad(boxes[i], pos1, loadedBoxes, carriageLength, carriageWidth, carriageHeight))
+                    if (canLoad(*boxIter, pos1, loadedBoxes, carriageLength, carriageWidth, carriageHeight))
                     {
-                        loadedBoxes.push_back(std::pair<Point, Box>(Point(pos1), boxes[i]));
-                        loadedVolume += boxes[i].Volume();
+                        loadedBoxes.push_back(Point_Box(Point(pos1), *boxIter));
+                        loadedVolume += boxIter->Volume();
                         ++loadedNum;
                         flag = true;
                         break;
                     }
-                    if (canLoad(boxes[i], pos2, loadedBoxes, carriageLength, carriageWidth, carriageHeight))
+                    if (canLoad(*boxIter, pos2, loadedBoxes, carriageLength, carriageWidth, carriageHeight))
                     {
-                        loadedBoxes.push_back(std::pair<Point, Box>(Point(pos2), boxes[i]));
-                        loadedVolume += boxes[i].Volume();
+                        loadedBoxes.push_back(Point_Box(Point(pos2), *boxIter));
+                        loadedVolume += boxIter->Volume();
                         ++loadedNum;
                         flag = true;
                         break;
                     }
-                    if (canLoad(boxes[i], pos3, loadedBoxes, carriageLength, carriageWidth, carriageHeight))
+                    if (canLoad(*boxIter, pos3, loadedBoxes, carriageLength, carriageWidth, carriageHeight))
                     {
-                        loadedBoxes.push_back(std::pair<Point, Box>(Point(pos3), boxes[i]));
-                        loadedVolume += boxes[i].Volume();
+                        loadedBoxes.push_back(Point_Box(Point(pos3), *boxIter));
+                        loadedVolume += boxIter->Volume();
                         ++loadedNum;
                         flag = true;
                         break;
                     }
                     //这个姿势装载不进去，那么就旋转一下
-                    boxes[i].Rotate();
+                    boxIter->Rotate();
                 }
                 //既然已经填进去了，就不用判断后面的块会不会挡住了
                 if (flag) break;
