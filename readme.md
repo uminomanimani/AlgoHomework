@@ -22,13 +22,17 @@
 ## 设计
 
 &emsp;&emsp;此次实验对该问题的基础部分进行了实现和测试。本文实现的算法参考了博客https://blog.csdn.net/qq_29848559/article/details/113035681 。所有的代码和测试均由本组所有成员独立完成。
+
 &emsp;&emsp;三维装箱问题是一个NPC问题，可以在多项式时间内验证答案是否正确，但无法在多项式时间内找到准确解。因此，本算法采用了类似于操作系统中空闲内存的申请方法以及日常生活中装货工人进行装货的启发式算法，即将已知货物从大到小进行排序，优先填装体积较大的货物，并将货物从按照车厢内从内到外、从下到上的顺序进行状态，并且装填的过程中尽量保证货物之间紧贴。
+
 &emsp;&emsp;本算法中用到的数据结构：```Point```结构体，定义了一个坐标，包含```x```、```y```和```z```。```Box```类，定义了长```length```、宽```width```、高```height```和旋转方法```rotate()```。长宽高是根据其在空间中的放置姿态来定义的，例如，对于一个```Box```类，```length=1```，```width=2```，```height=3```，对其调用```rotate()```方法，会变为```length=2```，```width=1```，```height=3```。```rotate()```方法是周期性的，对每个box对象每调用6次```rotate()```方法，```Box```的长宽高顺序会恢复到原来的状态。
+
 &emsp;&emsp;本实验采用了首次适应（First-Fit）的算法。思路如下：首先将所有物体按照体积大小进行排序，按序取货。设放置进货箱的货物组成的```Box```列表为```loadedBoxes```，每个元素都包含了货箱的放置坐标和尺寸```<Point, Box>```。对于第一件货物，将其尝试放入坐标为 $(0,0,0)$ 的位置，如果无法放下，则将其按照一定的顺序进行旋转（转置），容易得到，最多可以旋转五次，第六次会回到初始的状态，一旦发现可以放置则立即放置。如果六种状态均无法装入货箱，则丢弃并选取下一个货物。对于后来的货物，均按此处理。第一件货物被放置后，```loadedBoxes```不为空，按照顺序遍历其中的元素，对于每个元素，设其为```loadedBoxes[i]```，其坐标为```(loadedBoxes[i].point.x, loadedBoxes[i].point.y, loadedBoxes[i].point.z)```，长宽高分别为```loadedBoxes[i].length```、```loadedBox[i].width```和```loadedBox[i].height```。现有待放入箱子```box```，对于每个这样的```box```，都判断其是否能放到```loadedBox[i]```的前方、右方或者上方，更具体地说，依次判断```box```能否放置到```(loadedBoxes[i].point.x + loadedBoxes[i].box.length,loadedBoxes[i].point.y,loadedBoxes[i].point.z)```、```(loadedBoxes[i].point.x,loadedBoxes[i].point.y+loadedBox[i].box.width,loadedBoxes[i].point.z)```和```(loadedBoxes[i].point.x,loadedBoxes[i].point.y, loadedBoxes[i].point.z + loadedBoxes[i].box.height)```这三个点。且```box```的表面与```loadedBoxes[i]```的表面是紧贴的。在这个过程中，一旦发现可以放置则立即放置，再对下一个物体进行处理。对所有物体都如此处理，直到结束。
 
 ##  分析及结果
 
 &emsp;&emsp;本实验采用C++实现了上述算法，首先对待放置物体进行排序，调用标准库排序函数```std::sort()```(在``algorithm``头文件中)，复杂度为 $O(nlogn)$ 。对每一个物体进行取出，这个过程共取 $n$ 次，对每个取到的第 $i$ 个物体，又要根据之前已经放置的 $i-1$ 个物体来确定本物体的放置位置，对于三个候选的点，又必须根据已经放置的 $i-2$ 个物体来判断该点是否会阻挡该物体放置在这几个点。显然，整个过程的时间复杂度为 $\Theta(n^3)$ 。
+
 &emsp;&emsp;本实验核心算法实现在```Solution.cpp```的```firstFit()```函数中:
 ```cpp
 void firstFit(std::vector<Box>& boxes, int carriageLength, int carriageWidth, int carriageHeight, bool shuffle = false)
@@ -121,6 +125,7 @@ void firstFit(std::vector<Box>& boxes, int carriageLength, int carriageWidth, in
 }
 ```
 且分别在排序状态下和随机打乱的状态下进行了测试。测试项目包括每组装进的物体个数、填充率和所用时间。具体源代码和结果见附件。
+
 &emsp;&emsp;从表中看出，排序+放置算法的最大填充率为87.95%，平均填充率为77.39%，平均耗时56ms；而打乱+放置算法的最大填充率为79.20%，平均填充率为71.66%，平均耗时75ms。可见，该算法在时间和结果上拥有较好的表现。从排序和打乱两组对照中可以发现，该算法对较大体积的物品友好，而较小的物品会在空间内形成较多难以利用的空间碎片。
 
 ## 编译
