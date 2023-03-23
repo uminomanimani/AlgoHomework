@@ -29,11 +29,11 @@ public:
     {
         return this->H;
     }
-    /// @brief ÖÜÆÚµØ¶ÔÏä×Ó½øÐÐÐý×ª
+    /// @brief å‘¨æœŸåœ°å¯¹ç®±å­è¿›è¡Œæ—‹è½¬
     void Rotate()
     {
-        //LWH->WLH->WHL->HWL->HLW->LHW->LWH£¬¿É¼û£¬ÆæÊý´ÎÐý×ª½»»»Ç°Á½¸öÔªËØ£¬Å¼Êý´ÎÐý×ª½»»»ºóÁ½¸öÔªËØ
-        //µÚÁù´ÎÐý×ª¾Í»á»Ö¸´Ô­Ñù
+        //LWH->WLH->WHL->HWL->HLW->LHW->LWHï¼Œå¯è§ï¼Œå¥‡æ•°æ¬¡æ—‹è½¬äº¤æ¢å‰ä¸¤ä¸ªå…ƒç´ ï¼Œå¶æ•°æ¬¡æ—‹è½¬äº¤æ¢åŽä¸¤ä¸ªå…ƒç´ 
+        //ç¬¬å…­æ¬¡æ—‹è½¬å°±ä¼šæ¢å¤åŽŸæ ·
         if (rotateState == 0)
         {
             std::swap(L, W);

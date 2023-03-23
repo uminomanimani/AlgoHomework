@@ -1,20 +1,20 @@
-#include "Datastructure.h"
-#include "stdafx.h"
+#include "headers/Datastructure.h"
+#include "headers/stdafx.h"
 
-/// @brief ÓÅÑÅµØÊä³öÏä×ÓµÄĞÎ×´
-/// @param o Êä³öÁ÷
-/// @param box Òª´òÓ¡µÄBox¶ÔÏó
-/// @return »¹ÊÇo£¬ÎªÊ²Ã´Òª°Ño¸ø·µ»ØÒòÎª¿ÉÒÔÁ¬ÓÃ£ºÏñÊÇÕâÑùcout << box1 << box2 << endl;
+/// @brief ä¼˜é›…åœ°è¾“å‡ºç®±å­çš„å½¢çŠ¶
+/// @param o è¾“å‡ºæµ
+/// @param box è¦æ‰“å°çš„Boxå¯¹è±¡
+/// @return è¿˜æ˜¯oï¼Œä¸ºä»€ä¹ˆè¦æŠŠoç»™è¿”å›å› ä¸ºå¯ä»¥è¿ç”¨ï¼šåƒæ˜¯è¿™æ ·cout << box1 << box2 << endl;
 std::ostream& operator<<(std::ostream& o, const Box& box)
 {
     o << "(" << box.Length() << ", " << box.Width() << ", " << box.Height() << ")";
     return o;
 }
 
-/// @brief ÓÅÑÅµØÊä³ö×ø±ê
-/// @param o Êä³öÁ÷
-/// @param point Òª´òÓ¡µÄpoint¶ÔÏó
-/// @return »¹ÊÇo£¬ÎªÊ²Ã´Òª°Ño¸ø·µ»ØÒòÎª¿ÉÒÔÁ¬ÓÃ£ºÏñÊÇÕâÑùcout << box1 << box2 << endl;
+/// @brief ä¼˜é›…åœ°è¾“å‡ºåæ ‡
+/// @param o è¾“å‡ºæµ
+/// @param point è¦æ‰“å°çš„pointå¯¹è±¡
+/// @return è¿˜æ˜¯oï¼Œä¸ºä»€ä¹ˆè¦æŠŠoç»™è¿”å›å› ä¸ºå¯ä»¥è¿ç”¨ï¼šåƒæ˜¯è¿™æ ·cout << box1 << box2 << endl;
 std::ostream& operator<<(std::ostream& o, const Point& point)
 {
     o << "(" << point.x << ", " << point.y << ", " << point.z << ")";
