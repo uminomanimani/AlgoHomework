@@ -130,7 +130,4 @@ void firstFit(std::vector<Box>& boxes, int carriageLength, int carriageWidth, in
 
 ## 编译
 需要编译器支持C++11。
-```bash
-mkdir build
-```
 
