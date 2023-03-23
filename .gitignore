@@ -1,6 +1,9 @@
 .vscode/
 build/
 
+#mac
+.DS_Store
+
 # Prerequisites
 *.d
 
